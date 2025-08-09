@@ -42,6 +42,6 @@ fi
 
 echo "Beginning classification at $(date)"
 
-python src/llm_pipeline/main.py
+python -m src.llm_pipeline.main
 
 echo "run finished at $(date)"
