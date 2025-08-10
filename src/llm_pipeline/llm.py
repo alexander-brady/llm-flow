@@ -1,89 +1,153 @@
+from typing import Tuple, Dict, List, TYPE_CHECKING
+
 import pandas as pd
-from typing import TYPE_CHECKING, List
+from omegaconf import DictConfig
+from vllm import LLM, SamplingParams
+from vllm.outputs import RequestOutput
+from vllm.sampling_params import GuidedDecodingParams
+
+from .utils import render
 
 if TYPE_CHECKING:
-    from omegaconf import DictConfig
-    from vllm import LLM, SamplingParams, RequestOutput
     from transformers import PreTrainedTokenizer
+    from logging import Logger
 
 
-def generate_reasoning_trace(
-    df: pd.DataFrame,
-    llm: LLM,
-    prompt_config: DictConfig,
-    tokenizer: PreTrainedTokenizer,
-    sampling_params: SamplingParams
-) -> List[RequestOutput]:
+def init_models(model_cfg: DictConfig) -> Tuple[LLM, PreTrainedTokenizer]:
     """
-    Generate a reasoning trace for each item in the DataFrame's 'content' column.
-    
+    Initialize the language model based on the configuration.
+
     Args:
-        df (pd.DataFrame): The input DataFrame containing the 'content' column.
-        llm (LLM): The language model used for generation.
-        prompt_config (DictConfig): The configuration including the prompts.
-        tokenizer (PreTrainedTokenizer): The tokenizer for processing the messages.
-        sampling_params (SamplingParams): The sampling parameters for generation.
-        
+        model_cfg (DictConfig): The configuration for the model.
+
     Returns:
-        List[RequestOutput]: The generated reasoning traces.
+        Tuple[LLM, PreTrainedTokenizer]: The initialized language model and tokenizer.
     """
-    messages = df['content'].map(lambda x: [
-        { 
-            'role': 'system',
-            'content': prompt_config.system
-        },
-        {
-            'role': 'user',
-            'content': x
-        }
-    ])
-    prompts = tokenizer.apply_chat_template(messages.tolist(), tokenize=False, add_generation_prompt=True)
-    outputs = llm.generate(prompts=prompts, sampling_params=sampling_params)
-    return outputs
+    llm = LLM(model=model_cfg.name)
+    tok_name = model_cfg.tokenizer or model_cfg.name
+    tokenizer = PreTrainedTokenizer.from_pretrained(tok_name)
+    return llm, tokenizer
 
 
-def classify(
-    df: pd.DataFrame,
-    llm: LLM,
-    prompt_config: DictConfig,
-    reasoning: List[RequestOutput],
-    tokenizer: PreTrainedTokenizer,
-    sampling_params: SamplingParams
-) -> List[RequestOutput]:
+def build_step_params(prompt_cfg: DictConfig, params: Dict[str, dict]) -> Dict[str, SamplingParams]:
     """
-    Classify the sentiment based on the reasoning outputs.
-    
+    Build the sampling parameters for each prompt step.
+
     Args:
-        df (pd.DataFrame): The input DataFrame containing the 'content' column.
-        llm (LLM): The language model used for generation.
-        prompt_config (DictConfig): The configuration including the prompts.
-        reasoning (List[RequestOutput]): The reasoning outputs from the previous step.
-        tokenizer (PreTrainedTokenizer): The tokenizer for processing the messages.
-        sampling_params (SamplingParams): The sampling parameters for generation.
-        
-    Returns:
-        List[RequestOutput]: The generated sentiment classifications.
-    """
-    messages = df['content'].map(lambda x: [
-        {
-            'role': 'system',
-            'content': prompt_config.system
-        },
-        {
-            'role': 'user',
-            'content': x
-        },
-        {
-            'role': 'assistant',
-            'content': reasoning.outputs[0].text.strip()
-        },
-        {
-            'role': 'user',
-            'content': prompt_config.follow_up
-        }
-    ])
-    prompts = tokenizer.apply_chat_template(messages.tolist(), tokenize=False, add_generation_prompt=True)
-    prompts = [ prompt + prompt_config.final_answer for prompt in prompts ]
+        prompt_cfg (DictConfig): The configuration for the prompt steps.
 
-    outputs = llm.generate(prompts=prompts, sampling_params=sampling_params)
-    return outputs
+    Returns:
+        Dict[str, SamplingParams]: The sampling parameters for each prompt step.
+    """
+    out = {}
+    for step in prompt_cfg.prompts.steps:
+        step_type = (step.type or "").strip()
+        if step_type.endswith("guided") or (not step_type and step.choices):
+            out[step.name] = SamplingParams(
+                **params.get("guided", {}),
+                guided_decoding=GuidedDecodingParams(choice=step.choices),
+            )
+        else:
+            out[step.name] = SamplingParams(**params.get("standard", {}))
+    return out
+
+
+def run_steps_on_df(
+    df: pd.DataFrame,
+    steps_cfg: list[DictConfig],
+    tokenizer: PreTrainedTokenizer,
+    llm: LLM,
+    step_params: Dict[str, SamplingParams],
+    *,
+    log: Logger
+) -> Dict[str, List[str]]:
+    """
+    Execute the prompt steps on the DataFrame.
+
+    Args:
+        df: The DataFrame to process.
+        steps_cfg: The configuration for the prompt steps.
+        tokenizer: The tokenizer to use for text splitting and encoding.
+        llm: The language model to use for text generation.
+        step_params: The parameters for each prompt step.
+        log: The logger to use for logging errors.
+
+    Returns:
+        A dictionary containing the results of each prompt step.
+    """
+    results, messages, prev = {}, [], None
+    for step in steps_cfg:
+        try:
+            messages = extend_prompts(messages, step, prev, df)
+            prompts = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            outputs = llm.generate(prompts=prompts, sampling_params=step_params[step.name])
+            prev = [o.outputs[0].text.strip() for o in outputs]
+            results[step.name] = prev
+        except Exception as e:
+            log.exception("Failed on %s for step %s: %s", getattr(df, "name", "<df>"), step.name, e)
+    return results
+
+
+def extend_prompts(
+    messages: List[List[Dict[str, str]]],
+    step: DictConfig,
+    prev: List[RequestOutput] | None,
+    df: pd.DataFrame
+) -> List[List[Dict[str, str]]]:
+    """
+    Extend the prompts for the current step based on previous messages and the DataFrame.
+
+    Args:
+        messages: The list of previous messages.
+        step: The configuration for the current step.
+        prev: The list of previous outputs.
+        df: The DataFrame being processed.
+
+    Returns:
+        A tuple containing the updated messages, and tokenized prompts.
+    """    
+    if prev:
+        for lst, output in zip(messages, prev):
+            lst.append({
+                "role": "assistant",
+                "content": output[0].text.strip(),
+            })
+
+    if step.system:
+        for lst, (title, content, date) in zip(
+            messages,
+            df[["title", "content", "publishedAt"]].itertuples(index=False, name=None)
+        ):
+            lst.append({
+                "role": "system",
+                "content": render(step.system, title=title, content=content, date=date),
+            })
+        
+    if step.user:
+        for lst, (title, content, date) in zip(
+            messages,
+            df[["title", "content", "publishedAt"]].itertuples(index=False, name=None)
+        ):
+            lst.append({
+                "role": "user",
+                "content": render(step.user, title=title, content=content, date=date),
+            })
+            
+    if step.assistant:
+        if messages and messages[0][-1]['role'] == 'assistant':
+            for lst, (title, content, date) in zip(
+                messages,
+                df[["title", "content", "publishedAt"]].itertuples(index=False, name=None)
+            ):
+                lst[-1]['content'] += render(step.assistant, title=title, content=content, date=date)
+        else:
+            for lst, (title, content, date) in zip(
+                messages,
+                df[["title", "content", "publishedAt"]].itertuples(index=False, name=None)
+            ):
+                lst.append({
+                    "role": "assistant",
+                    "content": render(step.assistant, title=title, content=content, date=date),
+                })
+
+    return messages

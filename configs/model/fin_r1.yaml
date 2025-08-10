@@ -1,12 +1,12 @@
 name: SUFE-AIFLM-Lab/Fin-R1
 
-generation_params:
-  temperature: 0.7
-  top_p: 0.8
-  max_length: 4096
-  extra_args:
+params:
+  standard:
+    temperature: 0.7
+    top_p: 0.8
+    max_length: 4096
     repetition_penalty: 1.05
 
-guided_generation_params:
-  temperature: 0.0
-  max_tokens: 512
+  guided:
+    temperature: 0.0
+    max_length: 512

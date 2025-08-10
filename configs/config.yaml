@@ -3,5 +3,5 @@ defaults:
    - model: fin_r1
    - prompts: default
 
-data_dir: /data/artificial_intelligence
-csv_name: final_outputs
+data_dir: /data 
+output_name: final_outputs

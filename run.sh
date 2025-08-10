@@ -9,7 +9,7 @@
 #SBATCH --time=48:00:00
 #SBATCH --output=logs/classification_%j.log
 #SBATCH --error=logs/classification_%j.err
-#SBATCH --mail-type=END, FAIL
+#SBATCH --mail-type=END,FAIL
 
 mkdir -p logs
 
@@ -42,6 +42,6 @@ fi
 
 echo "Beginning classification at $(date)"
 
-python -m src.llm_pipeline.main
+python -m src.llm_pipeline
 
 echo "run finished at $(date)"

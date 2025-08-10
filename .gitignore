@@ -26,5 +26,8 @@ multirun/
 Thumbs.db
 
 # Data
-data/
+data/*
 !data/.gitkeep
+
+# Visual Studio
+.vscode/

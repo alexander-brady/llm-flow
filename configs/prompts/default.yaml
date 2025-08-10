@@ -1,19 +1,18 @@
-system: >
-  You are a financial analysis assistant. Your task is to read a news article and rate its likely 
-  impact on investments in companies involved in artificial intelligence on a scale from 1 to 3:
-  \n- 3 if you are confident the developments are highly positive for AI investments,
-  \n- 1 if you are confident they are highly negative,
-  \n- 2 if the impact is neutral or unclear.
-  \nFocus on how the events, sentiment, or developments described in the article could affect the financial 
-  outlook, investor sentiment, or market value of AI-related companies.
-
-follow_up: | # user
-  So, from 1 to 3, what is your final answer?
-
-final_answer: | # assistant
-  My final answer is: 
-
-choices:
-  - 1
-  - 2
-  - 3
+steps:
+  - name: reasoning
+    type: standard
+    system: >
+      You are a financial analysis assistant. Your task is to read a news article and determine whether the
+      article's publication date is recent enough to be relevant for current investment decisions in the AI sector.
+    user: {{ content }}
+    
+  - name: final_answer
+    type: guided
+    user: |
+      So, from 1 to 3, what is your final answer?
+    assistant: |
+      My final answer is:
+    choices:
+      - 1
+      - 2
+      - 3
