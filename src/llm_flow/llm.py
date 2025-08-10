@@ -3,7 +3,7 @@ from logging import Logger
 
 import pandas as pd
 from omegaconf import DictConfig
-from transformers import PreTrainedTokenizer
+from transformers import PreTrainedTokenizer, AutoTokenizer 
 from vllm import LLM, SamplingParams
 from vllm.outputs import RequestOutput
 from vllm.sampling_params import GuidedDecodingParams
@@ -23,7 +23,7 @@ def init_models(model_cfg: DictConfig) -> Tuple[LLM, PreTrainedTokenizer]:
     """
     llm = LLM(model=model_cfg.name)
     tok_name = model_cfg.get('tokenizer', model_cfg.name)
-    tokenizer = PreTrainedTokenizer.from_pretrained(tok_name)
+    tokenizer = AutoTokenizer.from_pretrained(tok_name)
     return llm, tokenizer
 
 
@@ -73,14 +73,14 @@ def run_steps_on_df(
     Returns:
         A dictionary containing the results of each flow step.
     """
-    results, messages, prev = {}, [], None
+    results, outputs = {}, None
+    messages = [ [] for _ in range(len(df)) ]
     for step in steps_cfg:
         try:
-            messages = extend_prompts(messages, step, prev, df)
+            messages = extend_prompts(messages, step, outputs, df)
             prompts = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
             outputs = llm.generate(prompts=prompts, sampling_params=step_params[step.name])
-            prev = [o.outputs[0].text.strip() for o in outputs]
-            results[step.name] = prev
+            results[step.name] = outputs
         except Exception as e:
             log.exception("Failed on %s for step %s: %s", getattr(df, "name", "<df>"), step.name, e)
     return results
@@ -89,7 +89,7 @@ def run_steps_on_df(
 def extend_prompts(
     messages: List[List[Dict[str, str]]],
     step: DictConfig,
-    prev: List[RequestOutput] | None,
+    prev_output: List[RequestOutput] | None,
     df: pd.DataFrame
 ) -> List[List[Dict[str, str]]]:
     """
@@ -98,17 +98,17 @@ def extend_prompts(
     Args:
         messages (List[List[Dict[str, str]]]): The list of previous messages.
         step (DictConfig): The configuration for the current step.
-        prev (List[RequestOutput] | None): The list of previous outputs.
+        prev_output (List[RequestOutput] | None): The list of previous outputs.
         df (pd.DataFrame): The DataFrame being processed.
 
     Returns:
         A tuple containing the updated messages, and tokenized prompts.
     """    
-    if prev:
-        for lst, output in zip(messages, prev):
+    if prev_output:
+        for lst, req_output in zip(messages, prev_output):
             lst.append({
                 "role": "assistant",
-                "content": output[0].text.strip(),
+                "content": req_output.outputs[0].text.strip(),
             })
 
     if step.get('system'):

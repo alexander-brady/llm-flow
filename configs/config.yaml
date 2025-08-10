@@ -1,9 +1,9 @@
 defaults:
    - _self_
    - model: fin_r1
-   - flow: default
+   - flow: sentiment
 
-data_dir: ${hydra:runtime.cwd}/data 
+data_dir: ${hydra:runtime.cwd}/data  # ${hydra:runtime.cwd} for relative paths from the working directory
 output_name: results
 
 logging:

@@ -15,5 +15,5 @@ steps:
     user: | 
       Is the article about an event that happened in the past? Answer only with "yes" or "no".
     choices:
-    - yes
-    - no
+    - "yes"
+    - "no"

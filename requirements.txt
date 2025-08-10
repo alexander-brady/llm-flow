@@ -88,6 +88,7 @@ propcache==0.3.2
 protobuf==6.31.1
 psutil==7.0.0
 py-cpuinfo==9.0.0
+pyarrow==21.0.0
 pybase64==1.4.2
 pycountry==24.6.1
 pycparser==2.22

@@ -27,7 +27,7 @@ def run_pipeline(cfg: DictConfig, *, log) -> pd.DataFrame:
     # Run flow on each file.
     log.info("Processing %d files from %s", file_count, data_dir)
     final = []
-    for filename, df in tqdm(file_iter, total=file_count):
+    for filename, df in tqdm(file_iter, total=file_count, desc="Processing files"):
         res = run_steps_on_df(df, cfg.flow.steps, tokenizer, llm, step_params, log=log)
         final.append(build_results(df, filename, res))
         
