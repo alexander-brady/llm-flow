@@ -1,6 +1,6 @@
 # LLM-Powered Classification
 
-This project uses the reasoning capabilities of **large language models (LLMs)** to perform classification tasks. Using step-based prompting, we can guide the model to classify items based on their content and context.
+This project uses the reasoning capabilities of large language models (LLMs) to perform multi-step classification tasks on large datasets. Using [custom prompting pipelines](configs/prompts/README.md), we can guide the model to classify items based on their content and context.
 
 ## Installation
 
