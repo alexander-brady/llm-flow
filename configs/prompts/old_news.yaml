@@ -5,8 +5,8 @@ steps:
       You are a financial analysis assistant. Your task is to read a news article and determine whether the article is 
       about an event that happened in the past, i.e. a previous date.
     user: | 
-      **Publication date:** {{ date }}
-      
+      **Publication date:** {{ publishedAt }}
+
       **Article Content**:
       {{ content }}
 

@@ -24,10 +24,7 @@ If `choices` is set, but no `type`, the default `guided` will be used. If no `ty
 
 Each step can have at most one `system`, `user`, and `assistant` field. These inputs are given to the model in order to generate a response. The content of the `assistant` field will be continued by the model's generation. Steps that only contain a `assistant` field will continue from the previous generation.
 
-There are three Jinja variables that will be filled out dynamically based on the article:
-- `title`: The title of the article
-- `date`: The publication date of the article
-- `content`: The main content of the article
+Jinja variables will be filled out based on the value of the passed in DataFrame. If `{{ content }}` is used, it will be replaced with the values of the `content` column of the DataFrame.
 
 **Example:**
 ```yaml
@@ -36,7 +33,8 @@ steps:
       type: standard
       system: >
         You are a helpful assistant.
-      user: {{ content }}
+      user: |
+        {{ content }}
 
     - name: weather
       type: guided

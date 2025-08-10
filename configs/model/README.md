@@ -1,12 +1,12 @@
 # Model Configs
 
-Model Configs define the parameters and settings for the vLLM model used for the classification.
+Model Configs define the parameters and settings for the model to use in the pipeline. Uses local vLLM instance as backend.
 
 ## Format
 
 **name**
 
-The name of the model configuration.
+The huggingface model name, e.g. `openai/gpt-oss-120b`.
 
 **tokenizer**
 
@@ -16,7 +16,7 @@ Optional: The tokenizer to use for text splitting and encoding. If not specified
 
 This dictionary contains the parameters for each unique prompt step, including temperature, top_p, max_length, and repetition_penalty. 
 
-Must include `standard` and `guided` configurations. Further configurations can be added as needed. Any configuration not explicitly defined will fall back to the `standard` settings. Configurations ending in `guided` will use guided decoding to limit output to one of a set of provided choices.
+Recommended to include `standard` and `guided` configurations. Further configurations can be added as needed. Any configuration not explicitly defined will fall back to the `standard` settings. Configurations ending in `guided` will use guided decoding to limit output to one of a set of provided choices.
 
 **Example**
 ```yaml

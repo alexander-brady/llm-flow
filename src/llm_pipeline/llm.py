@@ -1,16 +1,14 @@
-from typing import Tuple, Dict, List, TYPE_CHECKING
+from typing import Tuple, Dict, List
+from logging import Logger
 
 import pandas as pd
 from omegaconf import DictConfig
+from transformers import PreTrainedTokenizer
 from vllm import LLM, SamplingParams
 from vllm.outputs import RequestOutput
 from vllm.sampling_params import GuidedDecodingParams
 
 from .utils import render
-
-if TYPE_CHECKING:
-    from transformers import PreTrainedTokenizer
-    from logging import Logger
 
 
 def init_models(model_cfg: DictConfig) -> Tuple[LLM, PreTrainedTokenizer]:
@@ -114,40 +112,28 @@ def extend_prompts(
             })
 
     if step.system:
-        for lst, (title, content, date) in zip(
-            messages,
-            df[["title", "content", "publishedAt"]].itertuples(index=False, name=None)
-        ):
+        for lst, (_, row) in zip(messages, df.iterrows()):
             lst.append({
                 "role": "system",
-                "content": render(step.system, title=title, content=content, date=date),
+                "content": render(step.system, **row.to_dict()),
             })
         
     if step.user:
-        for lst, (title, content, date) in zip(
-            messages,
-            df[["title", "content", "publishedAt"]].itertuples(index=False, name=None)
-        ):
+        for lst, (_, row) in zip(messages, df.iterrows()):
             lst.append({
                 "role": "user",
-                "content": render(step.user, title=title, content=content, date=date),
+                "content": render(step.user, **row.to_dict()),
             })
             
     if step.assistant:
         if messages and messages[0][-1]['role'] == 'assistant':
-            for lst, (title, content, date) in zip(
-                messages,
-                df[["title", "content", "publishedAt"]].itertuples(index=False, name=None)
-            ):
-                lst[-1]['content'] += render(step.assistant, title=title, content=content, date=date)
+            for lst, (_, row) in zip(messages, df.iterrows()):
+                lst[-1]['content'] += render(step.assistant, **row.to_dict())
         else:
-            for lst, (title, content, date) in zip(
-                messages,
-                df[["title", "content", "publishedAt"]].itertuples(index=False, name=None)
-            ):
+            for lst, (_, row) in zip(messages, df.iterrows()):
                 lst.append({
                     "role": "assistant",
-                    "content": render(step.assistant, title=title, content=content, date=date),
+                    "content": render(step.assistant, **row.to_dict()),
                 })
 
     return messages

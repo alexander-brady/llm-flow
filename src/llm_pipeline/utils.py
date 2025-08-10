@@ -1,6 +1,6 @@
 from typing import Optional, Dict, Any
 import pandas as pd
-from OmegaConf import DictConfig, OmegaConf
+from omegaconf import DictConfig, OmegaConf
 from jinja2 import Template
 
 
@@ -48,7 +48,6 @@ def build_results(
         pd.DataFrame: The final results DataFrame.
     """
     return pd.DataFrame({
-        'title': df['title'],
         'filename': filename,
         'file_index': df.index,
         **results

@@ -5,7 +5,7 @@ steps:
       You are a financial analysis assistant. Your task is to read a news article and determine whether the given
       article's publication date is the correct date, or if it needs to be fixed.
     user: | 
-      **Publication date:** {{ date }}
+      **Publication date:** {{ publishedAt }}
       
       **Article Content**:
       {{ content }}
@@ -13,7 +13,7 @@ steps:
   - name: correct_date
     type: guided
     user: >
-      Is the article's publication date ({{ date }}) correct? Answer with "yes" or "no". Then,
+      Is the article's publication date ({{ publishedAt }}) correct? Answer with "yes" or "no". Then,
       if it's incorrect, give the correct day, month, and year (use the format DD/MM/YYYY).
       If you're unsure about a specific part of the date, fill it in with <unknown>.
     assistant: |
