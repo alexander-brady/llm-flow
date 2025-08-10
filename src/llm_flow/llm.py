@@ -27,18 +27,18 @@ def init_models(model_cfg: DictConfig) -> Tuple[LLM, PreTrainedTokenizer]:
     return llm, tokenizer
 
 
-def build_step_params(prompt_cfg: DictConfig, params: Dict[str, dict]) -> Dict[str, SamplingParams]:
+def build_step_params(steps_cfg: list[DictConfig], params: Dict[str, dict]) -> Dict[str, SamplingParams]:
     """
-    Build the sampling parameters for each prompt step.
+    Build the sampling parameters for each flow step.
 
     Args:
-        prompt_cfg (DictConfig): The configuration for the prompt steps.
+        steps_cfg (list[DictConfig]): The configuration for the flow steps.
 
     Returns:
-        Dict[str, SamplingParams]: The sampling parameters for each prompt step.
+        Dict[str, SamplingParams]: The sampling parameters for each flow step.
     """
     out = {}
-    for step in prompt_cfg.prompts.steps:
+    for step in steps_cfg:
         step_type = (step.type or "").strip()
         if step_type.endswith("guided") or (not step_type and step.choices):
             out[step.name] = SamplingParams(
@@ -60,18 +60,18 @@ def run_steps_on_df(
     log: Logger
 ) -> Dict[str, List[str]]:
     """
-    Execute the prompt steps on the DataFrame.
+    Execute the flow steps on the DataFrame.
 
     Args:
-        df: The DataFrame to process.
-        steps_cfg: The configuration for the prompt steps.
-        tokenizer: The tokenizer to use for text splitting and encoding.
-        llm: The language model to use for text generation.
-        step_params: The parameters for each prompt step.
-        log: The logger to use for logging errors.
+        df (pd.DataFrame): The DataFrame to process.
+        steps_cfg (list[DictConfig]): The configuration for the flow steps.
+        tokenizer (PreTrainedTokenizer): The tokenizer to use for text splitting and encoding.
+        llm (vllm.LLM): The language model to use for text generation.
+        step_params (Dict[str, SamplingParams]): The parameters for each flow step.
+        log (Logger): The logger to use for logging errors.
 
     Returns:
-        A dictionary containing the results of each prompt step.
+        A dictionary containing the results of each flow step.
     """
     results, messages, prev = {}, [], None
     for step in steps_cfg:
@@ -96,10 +96,10 @@ def extend_prompts(
     Extend the prompts for the current step based on previous messages and the DataFrame.
 
     Args:
-        messages: The list of previous messages.
-        step: The configuration for the current step.
-        prev: The list of previous outputs.
-        df: The DataFrame being processed.
+        messages (List[List[Dict[str, str]]]): The list of previous messages.
+        step (DictConfig): The configuration for the current step.
+        prev (List[RequestOutput] | None): The list of previous outputs.
+        df (pd.DataFrame): The DataFrame being processed.
 
     Returns:
         A tuple containing the updated messages, and tokenized prompts.

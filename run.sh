@@ -42,8 +42,8 @@ fi
 
 echo "Beginning classification at $(date)"
 
-python -m src.llm_pipeline \
+python -m src.llm_flow \
   output_name=old_news \
-  prompts=old_news
+  flow=old_news
 
 echo "run finished at $(date)"

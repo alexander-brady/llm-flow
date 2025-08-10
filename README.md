@@ -45,7 +45,7 @@ Flows are written in the `configs/prompts`. You can override the current prompt 
 
 ## Data Format
 
-> For our experiments, we used news articles from the [GNews API](http://gnews.io).
+> For our original experiments, we used news articles from the [GNews API](http://gnews.io).
 
 Place your data in the `data/` directory (or override `data_dir` via config/CLI). Data must be Parquet or CSV format. Each file within the directory will be treated as part of the dataset.
 
@@ -67,11 +67,11 @@ Place your data in the `data/` directory (or override `data_dir` via config/CLI)
 
 Each run produces:
 
-* `final_outputs.csv` — classification results with reasoning traces
+* `results.csv` — classification results with reasoning traces
 * Hydra config snapshot (`.hydra/`) for reproducibility
 * Optional logs in the run directory
 
-The `final_outputs.csv` file has the following format:
+The `results.csv` file has the following format:
 - `filename`: Name of the file the item in this row is from
 - `file_index`: Index of the item inside `filename`
 - `<step_name>`: Output of the LLM for this step

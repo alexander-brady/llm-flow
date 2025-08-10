@@ -1,10 +1,10 @@
-# Prompt Configs
+# Flow Configs
 
-Prompt Configs describe the steps that will be taken to process user input and generate a response. Each step continues from the previous one, sharing context and information.
+Flows describe the steps that will be taken to process user input and generate a response. Each step continues from the previous one, sharing context and information.
 
 ## Format
 
-Each Prompt Config consists of a series of steps that define the interaction between the user and the assistant. 
+Each flow consists of a series of steps that define the interaction between the user and the assistant. 
 
 **name**
 

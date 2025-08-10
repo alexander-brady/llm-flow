@@ -1,6 +1,6 @@
 # Model Configs
 
-Model Configs define the parameters and settings for the model to use in the pipeline. Uses local vLLM instance as backend.
+Model Configs define the parameters and settings for the model to use in the flow pipeline. Uses local vLLM instance as backend.
 
 ## Format
 
