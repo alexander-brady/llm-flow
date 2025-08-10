@@ -22,7 +22,7 @@ def init_models(model_cfg: DictConfig) -> Tuple[LLM, PreTrainedTokenizer]:
         Tuple[LLM, PreTrainedTokenizer]: The initialized language model and tokenizer.
     """
     llm = LLM(model=model_cfg.name)
-    tok_name = model_cfg.tokenizer or model_cfg.name
+    tok_name = model_cfg.get('tokenizer', model_cfg.name)
     tokenizer = PreTrainedTokenizer.from_pretrained(tok_name)
     return llm, tokenizer
 
@@ -39,8 +39,8 @@ def build_step_params(steps_cfg: list[DictConfig], params: Dict[str, dict]) -> D
     """
     out = {}
     for step in steps_cfg:
-        step_type = (step.type or "").strip()
-        if step_type.endswith("guided") or (not step_type and step.choices):
+        step_type = (step.get('type') or "").strip()
+        if step_type.endswith("guided") or (not step_type and step.get('choices')):
             out[step.name] = SamplingParams(
                 **params.get("guided", {}),
                 guided_decoding=GuidedDecodingParams(choice=step.choices),
@@ -111,21 +111,21 @@ def extend_prompts(
                 "content": output[0].text.strip(),
             })
 
-    if step.system:
+    if step.get('system'):
         for lst, (_, row) in zip(messages, df.iterrows()):
             lst.append({
                 "role": "system",
                 "content": render(step.system, **row.to_dict()),
             })
         
-    if step.user:
+    if step.get('user'):
         for lst, (_, row) in zip(messages, df.iterrows()):
             lst.append({
                 "role": "user",
                 "content": render(step.user, **row.to_dict()),
             })
             
-    if step.assistant:
+    if step.get('assistant'):
         if messages and messages[0][-1]['role'] == 'assistant':
             for lst, (_, row) in zip(messages, df.iterrows()):
                 lst[-1]['content'] += render(step.assistant, **row.to_dict())

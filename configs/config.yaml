@@ -5,3 +5,6 @@ defaults:
 
 data_dir: /data 
 output_name: results
+
+logging:
+  level: INFO

@@ -11,7 +11,7 @@ def setup_logging(cfg: DictConfig):
         cfg (DictConfig): The configuration object.
     """
     logging.basicConfig(
-        level=cfg.logging.level or logging.INFO,
+        level=cfg.get("logging", {}).get("level", logging.INFO),
         format="%(asctime)s %(levelname)s %(name)s | %(message)s",
         handlers=[logging.StreamHandler(sys.stdout)],
     )
