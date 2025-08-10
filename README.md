@@ -1,6 +1,6 @@
 # LLM Flow
 
-Lightweight framework for building multi-step pipelines, called [flows](configs/flow/README.md), powered by large language models. Each step can answer prompts, classify from predefined options, or build on previous results to create complex decision flows. Designed for simplicity and scalability, LLM Flow makes it easy to prototype, iterate, and deploy simple yet intelligent workflows on large datasets.
+Lightweight framework for building multi-step pipelines, called [flows](configs/flow/README.md), powered by large language models. Each step can answer prompts, classify from predefined options, or build on previous results to create complex multi-step tasks. Designed for simplicity and scalability, LLM Flow makes it easy to prototype, iterate, and deploy simple yet intelligent workflows on large datasets.
 
 ## Installation
 
