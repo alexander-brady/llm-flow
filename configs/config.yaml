@@ -3,7 +3,7 @@ defaults:
    - model: fin_r1
    - flow: default
 
-data_dir: /data 
+data_dir: ${hydra:runtime.cwd}/data 
 output_name: results
 
 logging:

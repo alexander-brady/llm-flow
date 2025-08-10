@@ -11,7 +11,7 @@ from .io import save_results
 def main(cfg: DictConfig):
     log = init_logging(cfg)
     df = run_pipeline(cfg, log=log)
-    out_csv = Path(cfg.run.dir) / f"{cfg.csv_name}.csv"
+    out_csv = Path(".") / f"{cfg.csv_name}.csv"
     save_results(df, out_csv)
     log.info("Saved %d rows -> %s", len(df), out_csv.resolve())
 

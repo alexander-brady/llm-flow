@@ -31,7 +31,7 @@ def iter_parquet_dir(data_dir: Path) -> Tuple[int, Iterator[Tuple[str, pd.DataFr
         Tuple[int, Iterator[Tuple[str, pd.DataFrame]]]: 
             A tuple containing the number of files found and an iterator over the articles.
     """
-    file_count = sum(1 for f in data_dir.glob("*") if f.suffix.lower() in {".parquet", ".csv"})
+    file_count = sum(1 for f in data_dir.glob("*") if f.is_file() and f.suffix.lower() in {".parquet", ".csv"})
     return file_count, load_articles_from_dir(data_dir)
 
 
