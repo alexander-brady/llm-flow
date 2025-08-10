@@ -1,6 +1,6 @@
-# LLM-Powered Classification
+# LLM Flow
 
-This project uses the reasoning capabilities of large language models (LLMs) to perform multi-step classification tasks on large datasets. Using [custom prompting pipelines](configs/prompts/README.md), we can guide the model to classify items based on their content and context.
+Lightweight framework for building multi-step pipelines powered by large language models. Each step can answer prompts, classify from predefined options, or build on previous results to create complex decision flows. Designed for simplicity and scalability, LLM Flow makes it easy to prototype, iterate, and deploy simple yet intelligent workflows on large datasets.
 
 ## Installation
 
@@ -15,11 +15,11 @@ source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
 pip install -r requirements.txt
 ```
 
-3. Download tabular data files to the `data/` directory. Data must be Parquet or CSV format. 
+3. Download tabular data files to the `data/` directory. Data must be Parquet or CSV format.
 
 ## Configuration
 
-This project uses **[Hydra](https://hydra.cc)** for configuration management. These configurations define not just the model and data parameters, but also the entire pipeline behavior (see [configs/prompts](configs/prompts/README.md)).
+This project uses **[Hydra](https://hydra.cc)** for configuration management. These configurations define not just the model and data parameters, but also the entire pipeline behavior.
 
 * Default configs live in the [`configs/`](configs) directory.
 * You can override any parameter from the command line.
@@ -28,12 +28,20 @@ This project uses **[Hydra](https://hydra.cc)** for configuration management. Th
 Example:
 
 ```bash
-python -m src.llm_pipeline \
+python -m src.llm_flow \
     model.name=openai/gpt-oss-120b \
     model.temperature=0.5 \
-    data_dir=data/processed
+    data_dir=data/processed \
+    flow=default
 ```
 
+## Designing Prompt Flows
+
+> For detailed documentation, see [configs/prompts](configs/prompts/README.md).
+
+Prompt flows define multi-step interactions, written in simple YAML.  Each step builds on previous outputs, allowing you to design clear, structured LLM workflows.
+
+Flows are written in the `configs/prompts`. You can override the current prompt flow run via config or CLI.
 
 ## Data Format
 
@@ -50,7 +58,7 @@ Place your data in the `data/` directory (or override `data_dir` via config/CLI)
 3. Run:
 
    ```bash
-   python -m src.llm_pipeline
+   python -m src.llm_flow
    ```
 4. Results are saved automatically to the Hydra run directory (e.g., `outputs/YYYY-MM-DD/HH-MM-SS/`).
 
