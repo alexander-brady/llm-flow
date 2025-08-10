@@ -4,9 +4,9 @@ params:
   standard:
     temperature: 0.7
     top_p: 0.8
-    max_length: 4096
+    max_tokens: 4096
     repetition_penalty: 1.05
 
   guided:
     temperature: 0.0
-    max_length: 512
+    max_tokens: 512
