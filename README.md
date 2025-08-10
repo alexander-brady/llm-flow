@@ -1,6 +1,6 @@
 # LLM Flow
 
-Lightweight framework for building multi-step pipelines powered by large language models. Each step can answer prompts, classify from predefined options, or build on previous results to create complex decision flows. Designed for simplicity and scalability, LLM Flow makes it easy to prototype, iterate, and deploy simple yet intelligent workflows on large datasets.
+Lightweight framework for building multi-step pipelines, called [flows](configs/flow/README.md), powered by large language models. Each step can answer prompts, classify from predefined options, or build on previous results to create complex decision flows. Designed for simplicity and scalability, LLM Flow makes it easy to prototype, iterate, and deploy simple yet intelligent workflows on large datasets.
 
 ## Installation
 
@@ -35,13 +35,13 @@ python -m src.llm_flow \
     flow=default
 ```
 
-## Designing Prompt Flows
+## Designing Flows
 
-> For detailed documentation, see [configs/prompts](configs/prompts/README.md).
+> For detailed documentation, see [configs/flow](configs/flow/README.md).
 
-Prompt flows define multi-step interactions, written in simple YAML.  Each step builds on previous outputs, allowing you to design clear, structured LLM workflows.
+Flows define multi-step interactions, written in simple YAML.  Each step builds on previous outputs, allowing you to design clear, structured LLM workflows.
 
-Flows are written in the `configs/prompts`. You can override the current prompt flow run via config or CLI.
+Flows are written in the `configs/flow` folder. You can override the current prompt flow run via config or Hydra CLI.
 
 ## Data Format
 
