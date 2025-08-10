@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=classification
+#SBATCH --job-name=old_news
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
@@ -7,8 +7,8 @@
 #SBATCH --gpus-per-node=1
 #SBATCH --gres=gpumem:40g
 #SBATCH --time=48:00:00
-#SBATCH --output=logs/classification_%j.log
-#SBATCH --error=logs/classification_%j.err
+#SBATCH --output=logs/old_news_%j.log
+#SBATCH --error=logs/old_news_%j.err
 #SBATCH --mail-type=END,FAIL
 
 mkdir -p logs
@@ -42,6 +42,8 @@ fi
 
 echo "Beginning classification at $(date)"
 
-python -m src.llm_pipeline
+python -m src.llm_pipeline \
+  output_name=old_news \
+  prompts=old_news
 
 echo "run finished at $(date)"

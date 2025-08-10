@@ -1,0 +1,96 @@
+steps:
+  - name: reasoning
+    type: standard
+    system: >
+      You are a financial analysis assistant. Your task is to read a news article and determine whether the given
+      article's publication date is the correct date, or if it needs to be fixed.
+    user: | 
+      **Publication date:** {{ date }}
+      
+      **Article Content**:
+      {{ content }}
+    
+  - name: correct_date
+    type: guided
+    user: >
+      Is the article's publication date ({{ date }}) correct? Answer with "yes" or "no". Then,
+      if it's incorrect, give the correct day, month, and year (use the format DD/MM/YYYY).
+      If you're unsure about a specific part of the date, fill it in with <unknown>.
+    assistant: |
+      The publication date is: "
+    choices:
+      - yes
+      - no
+
+  - name: correct_day
+    type: guided
+    assistant: |
+      ". The correct date would be: 
+    choices:
+    - <unknown>
+    - 01
+    - 02
+    - 03
+    - 04
+    - 05
+    - 06
+    - 07
+    - 08
+    - 09
+    - 10
+    - 11
+    - 12
+    - 13
+    - 14
+    - 15
+    - 16
+    - 17
+    - 18
+    - 19
+    - 20
+    - 21
+    - 22
+    - 23
+    - 24
+    - 25
+    - 26
+    - 27
+    - 28
+    - 29
+    - 30
+    - 31
+
+  - name: correct_month
+    type: guided
+    assistant: /
+    choices:
+    - <unknown>
+    - 01
+    - 02
+    - 03
+    - 04
+    - 05
+    - 06
+    - 07
+    - 08
+    - 09
+    - 10
+    - 11
+    - 12
+  
+  - name: correct_year
+    type: guided
+    assistant: /
+    choices:
+    - <unknown>
+    - 2015
+    - 2016
+    - 2017
+    - 2018
+    - 2019
+    - 2020
+    - 2021
+    - 2022
+    - 2023
+    - 2024
+    - 2025

@@ -2,17 +2,20 @@ steps:
   - name: reasoning
     type: standard
     system: >
-      You are a financial analysis assistant. Your task is to read a news article and determine whether the
-      article's publication date is recent enough to be relevant for current investment decisions in the AI sector.
+      You are a financial analysis assistant. Your task is to read a news article and determine whether it is likely to 
+      have a positive, negative, or neutral impact on investments in companies involved in artificial intelligence. 
+      Focus on how the events, sentiment, or developments described in the article could affect the financial outlook,
+      investor sentiment, or market value of such companies.
+
     user: {{ content }}
     
   - name: final_answer
     type: guided
     user: |
-      So, from 1 to 3, what is your final answer?
+      What is the sentiment of this article? Is it positive, negative, or neutral?
     assistant: |
-      My final answer is:
+      The sentiment is: 
     choices:
-      - 1
-      - 2
-      - 3
+      - positive
+      - negative
+      - neutral

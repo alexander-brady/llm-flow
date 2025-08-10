@@ -1,0 +1,19 @@
+steps:
+  - name: reasoning
+    type: standard
+    system: >
+      You are a financial analysis assistant. Your task is to read a news article and determine whether the article is 
+      about an event that happened in the past, i.e. a previous date.
+    user: | 
+      **Publication date:** {{ date }}
+      
+      **Article Content**:
+      {{ content }}
+
+  - name: final_answer:
+    type: guided
+    user: | 
+      Is the article about an event that happened in the past? Answer only with "yes" or "no".
+    choices:
+    - yes
+    - no
