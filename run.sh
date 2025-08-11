@@ -43,7 +43,6 @@ fi
 echo "Beginning classification at $(date)"
 
 python -m src.llm_flow \
-  output_name=fix_dates \
   flow=fix_dates
 
 echo "run finished at $(date)"
