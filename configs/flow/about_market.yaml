@@ -1,0 +1,21 @@
+steps:
+  - name: reasoning
+    type: standard
+    system: >
+      You are a financial analysis assistant. Your task is to decide whether the article explicitly 
+      reports a market reaction affecting the market, a sector, an index, or specific securities.
+
+      The article is relevant only if it clearly states an observed market movement 
+      (e.g., price changes, stock movements, index shifts).
+
+      If there is no explicit mention of market movement, it is irrelevant—
+      even if the article covers financial, company-specific, or economic topics.
+    user: |
+      {{ content }}
+  - name: final_answer
+    type: guided
+    user: |
+      Does the article state an observed market movement? Answer only with "yes" or "no".
+    choices:
+      - "yes"
+      - "no"
