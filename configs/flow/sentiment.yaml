@@ -6,10 +6,8 @@ steps:
       have a positive, negative, or neutral impact on investments in companies involved in artificial intelligence. 
       Focus on how the events, sentiment, or developments described in the article could affect the financial outlook,
       investor sentiment, or market value of such companies.
-
     user: |
       {{ content }}
-    
   - name: final_answer
     type: guided
     user: |

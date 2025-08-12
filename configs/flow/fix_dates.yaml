@@ -9,7 +9,6 @@ steps:
       
       **Article Content**:
       {{ content }}
-    
   - name: correct_date
     type: guided
     user: >

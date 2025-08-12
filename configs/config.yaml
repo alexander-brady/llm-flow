@@ -12,3 +12,5 @@ logging:
 hydra:
    job:
       chdir: true
+   run:
+      dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}-${env:SLURM_JOB_ID}

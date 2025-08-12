@@ -60,8 +60,7 @@ Place your data in the `data/` directory (or override `data_dir` via config/CLI)
    ```bash
    python -m src.llm_flow
    ```
-4. Results are saved automatically to the Hydra run directory (e.g., `outputs/YYYY-MM-DD/HH-MM-SS/`).
-
+4. Results are saved automatically to the Hydra run directory (default: `outputs/YYYY-MM-DD/HH-MM-SS-<SLURM_JOB_ID>/`).
 
 ## Outputs
 
@@ -69,9 +68,10 @@ Each run produces:
 
 * `results.csv` — classification results with reasoning traces
 * Hydra config snapshot (`.hydra/`) for reproducibility
-* Optional logs in the run directory
+* Log file
 
 The `results.csv` file has the following format:
 - `filename`: Name of the file the item in this row is from
 - `file_index`: Index of the item inside `filename`
-- `<step_name>`: Output of the LLM for this step
+- For each step:
+    - `<step_name>`: Output of the LLM for this step

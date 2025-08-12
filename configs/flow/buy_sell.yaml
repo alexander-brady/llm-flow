@@ -1,0 +1,21 @@
+steps:
+  - name: reasoning
+    type: standard
+    system: >
+      You are a financial analysis assistant. Your task is to read a news article and assess 
+      whether this news would lead you to suggest a buy, sell, or hold action for a portfolio 
+      of companies involved in artificial intelligence. Focus on how the events, sentiment, 
+      or developments described in the article might impact the financial performance, investor 
+      perception, or market valuation of these AI-related companies.
+    user: |
+      {{ content }}
+  - name: final_answer
+    type: guided
+    user: |
+      So would you recommend to buy, sell or hold?
+    assistant: |
+      My recommendation would be to:  
+    choices:
+      - buy
+      - sell
+      - hold

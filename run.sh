@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=fix_dates
+#SBATCH --job-name=sentiment
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=4
@@ -7,8 +7,8 @@
 #SBATCH --gpus-per-node=1
 #SBATCH --gres=gpumem:40g
 #SBATCH --time=48:00:00
-#SBATCH --output=logs/fix_dates_%j.log
-#SBATCH --error=logs/fix_dates_%j.err
+#SBATCH --output=logs/sentiment_%j.log
+#SBATCH --error=logs/sentiment_%j.err
 #SBATCH --mail-type=END,FAIL
 
 mkdir -p logs
@@ -43,6 +43,7 @@ fi
 echo "Beginning classification at $(date)"
 
 python -m src.llm_flow \
-  flow=fix_dates
+  flow=sentiment \
+  output_name=sentiment
 
 echo "run finished at $(date)"
