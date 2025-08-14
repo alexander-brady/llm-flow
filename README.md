@@ -68,7 +68,7 @@ Each run produces:
 
 * `results.csv` — classification results with reasoning traces
 * Hydra config snapshot (`.hydra/`) for reproducibility
-* Log file
+* Log file (`__main__.log`)
 
 The `results.csv` file has the following format:
 - `filename`: Name of the file the item in this row is from

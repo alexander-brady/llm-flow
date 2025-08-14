@@ -79,7 +79,8 @@ def run_steps_on_df(
         try:
             messages = extend_prompts(messages, step, outputs, df)
             prompts = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-            outputs = llm.generate(prompts=prompts, sampling_params=step_params[step.name])
+            request = llm.generate(prompts=prompts, sampling_params=step_params[step.name])
+            outputs = [ r.outputs[0].text.strip() for r in request ]
             results[step.name] = outputs
         except Exception as e:
             log.exception("Failed on %s for step %s: %s", getattr(df, "name", "<df>"), step.name, e)
@@ -89,7 +90,7 @@ def run_steps_on_df(
 def extend_prompts(
     messages: List[List[Dict[str, str]]],
     step: DictConfig,
-    prev_output: List[RequestOutput] | None,
+    prev_output: List[str] | None,
     df: pd.DataFrame
 ) -> List[List[Dict[str, str]]]:
     """
@@ -98,17 +99,17 @@ def extend_prompts(
     Args:
         messages (List[List[Dict[str, str]]]): The list of previous messages.
         step (DictConfig): The configuration for the current step.
-        prev_output (List[RequestOutput] | None): The list of previous outputs.
+        prev_output (List[str] | None): The list of previous generated text outputs.
         df (pd.DataFrame): The DataFrame being processed.
 
     Returns:
         A tuple containing the updated messages, and tokenized prompts.
     """    
     if prev_output:
-        for lst, req_output in zip(messages, prev_output):
+        for lst, gen in zip(messages, prev_output):
             lst.append({
                 "role": "assistant",
-                "content": req_output.outputs[0].text.strip(),
+                "content": gen,
             })
 
     if step.get('system'):
