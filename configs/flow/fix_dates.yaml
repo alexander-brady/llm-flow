@@ -1,9 +1,17 @@
 steps:
   - name: reasoning
     type: standard
-    system: >
-      You are a financial analysis assistant. Your task is to read a news article and determine whether the given
-      article's publication date is the correct date, or if it needs to be fixed.
+    system: |
+      You are a financial analysis assistant.  
+      Determine whether the article's publication date is correct **based only on explicit dates or time references in the text**.  
+
+      Rules:  
+      - If no information contradicts the publication date, assume it is correct.  
+      - Dates referring to past events alone do not prove the date is wrong.  
+      - Signs the date may be incorrect include:  
+        - The article starts with a dateline (e.g., “(01/01/2020, Cairo) …”).  
+        - References to events occurring after the publication date.  
+        - Relative time references (“yesterday,” “last week,” etc.) that conflict with the publication date.  
     user: | 
       **Publication date:** {{ publishedAt }}
       
@@ -12,19 +20,19 @@ steps:
   - name: correct_date
     type: guided
     user: >
-      Is the article's publication date ({{ publishedAt }}) correct? Answer with "yes" or "no". Then,
-      if it's incorrect, give the correct day, month, and year (use the format DD/MM/YYYY).
-      If you're unsure about a specific part of the date, fill it in with <unknown>.
-    assistant: |
-      The publication date is: "
+      Is the article's publication date ({{ publishedAt }}) correct? Answer only with "yes" or "no".
     choices:
       - "yes"
       - "no"
 
   - name: correct_day
     type: guided
+    user: >
+      If the publication date is incorrect, provide the correct date in the format DD/MM/YYYY.
+      If you are unsure about any part of the date, or if the publication date is correct, 
+      replace the unknown parts with <unknown>.
     assistant: |
-      ". The correct date would be: 
+      The correct date would be: 
     choices:
     - "<unknown>"
     - "01"

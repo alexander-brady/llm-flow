@@ -1,9 +1,10 @@
 steps:
   - name: reasoning
     type: standard
-    system: >
-      You are a financial analysis assistant. Your task is to read a news article and determine whether the article is 
-      about an event that happened in the past, i.e. a previous date.
+    system: |
+      You are a financial analysis assistant. Read the news article and determine whether the main event it describes:  
+      - Happened in the past (before the publication date), or  
+      - Is occurring today, or is ongoing/current.  
     user: | 
       **Publication date:** {{ publishedAt }}
 
