@@ -8,6 +8,7 @@ steps:
       Rules:  
       - If no information contradicts the publication date, assume it is correct.  
       - Dates referring to past events alone do not prove the date is wrong.  
+      - If you're unsure, or the correct date would be within a few dates of the publication date, assume the publication date is correct.
       - Signs the date may be incorrect include:  
         - The article starts with a dateline (e.g., “(01/01/2020, Cairo) …”).  
         - References to events occurring after the publication date.  
@@ -20,7 +21,7 @@ steps:
   - name: correct_date
     type: guided
     user: >
-      Is the article's publication date ({{ publishedAt }}) correct? Answer only with "yes" or "no".
+      Is the article's publication date ({{ publishedAt }}) correct? Answer only with "yes" if the publication date is correct or "no" if you are sure it is incorrect.
     choices:
       - "yes"
       - "no"
@@ -28,7 +29,7 @@ steps:
   - name: correct_day
     type: guided
     user: >
-      If the publication date is incorrect, provide the correct date in the format DD/MM/YYYY.
+      If the publication date is incorrect, provide the correct date in the format DD/MM/YYYY. (Example: 01/01/2020)
       If you are unsure about any part of the date, or if the publication date is correct, 
       replace the unknown parts with <unknown>.
     assistant: |

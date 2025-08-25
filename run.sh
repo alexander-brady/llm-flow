@@ -47,3 +47,5 @@ python -m src.llm_flow \
   output_name=sentiment
 
 echo "run finished at $(date)"
+
+deactivate
