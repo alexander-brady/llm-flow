@@ -24,7 +24,7 @@ dev = [
 github = "https://github.com/alexander-brady/llm-flow"
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py313"
 line-length = 120
 
 [tool.ruff.lint]
@@ -35,8 +35,8 @@ ignore = ["E501"]                    # let the formatter handle wrapping
 known-first-party = ["vl_saliency"]
 
 [tool.mypy]
-python_version = "3.11"
-files = ["src", "tests"]
+python_version = "3.13"
+files = ["llm_flow"]
 exclude = ["\\.venv", "env", "build", "dist"]
 follow_imports = "skip"  # don't analyze third-party libs
 ignore_missing_imports = true
