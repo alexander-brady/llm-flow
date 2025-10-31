@@ -8,7 +8,7 @@ from .logging_setup import init_logging
 from .pipeline import run_pipeline
 
 
-@hydra.main(config_path="../../configs", config_name="config", version_base="1.3")
+@hydra.main(config_path="../configs", config_name="config", version_base="1.3")
 def main(cfg: DictConfig):
     log = init_logging(cfg)
     df = run_pipeline(cfg, log=log)
