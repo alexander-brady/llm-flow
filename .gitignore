@@ -31,3 +31,6 @@ data/*
 
 # Visual Studio
 .vscode/
+
+# Cache
+*cache/

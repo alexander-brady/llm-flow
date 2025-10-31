@@ -4,18 +4,12 @@ Lightweight framework for building multi-step pipelines, called [flows](configs/
 
 ## Installation
 
-1. Create and activate a virtual environment
+1. We recommend using [uv](https://docs.astral.sh/uv/getting-started/installation/) to manage your Python environment and download dependencies:
 ```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
+uv sync
 ```
 
-2. Install the required dependencies
-```bash
-pip install -r requirements.txt
-```
-
-3. Download tabular data files to the `data/` directory. Data must be Parquet or CSV format.
+2. Download tabular data files to the `data/` directory. Data must be Parquet or CSV format.
 
 ## Configuration
 
