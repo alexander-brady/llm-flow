@@ -1,0 +1,62 @@
+steps:
+  - name: topic
+    type: guided
+    system: >
+      You are a political analyst. You are given the following political ad to analyze:
+      {{ ad_creative_bodies }}
+    user: |
+      Which of these best describes the topic of this ad?\n\n
+      Property taxes, environmental protection, sewer sale, education, crime/justice, abortion, voting rights, immigration, voting, election integrity, healthcare access, personal freedom, economy, affordable housing, border security, other
+
+    choices:
+      - property taxes
+      - environmental protection
+      - sewer sale
+      - education
+      - crime/justice
+      - abortion
+      - voting rights
+      - immigration
+      - voting
+      - election integrity
+      - healthcare access
+      - personal freedom
+      - economy
+      - affordable housing
+      - border security
+      - other
+
+  - name: stance
+    type: guided
+    user: |
+      What is the stance of this ad towards the topic? Is it generally "in favor of" (supportive) or "against" (opposed) the topic
+
+  - name: moral_foundation
+    type: guided
+    user: >
+      Which moral foundation does this ad primarily appeal to? Choose one from the following list:
+
+      Moral Foundations:
+        Care/Harm: It suggests that someone other than the speaker is worthy of compassion or is experiencing harm, grounded in the values of kindness, tenderness, and care.
+        Fairness/Cheating: Emphasizes justice, personal rights, and independence; involves comparing with other groups. Advocates for equal opportunity and resists those who benefit without contributing (``Free Riders").
+        Loyalty/Betrayal: Based on the values of loyalty to one's country and willingness to sacrifice for the group. Activated by a sense of unity and collective responsibility—``one for all, and all for one".
+        Authority/Subversion: Centers on showing respect (or resistance) toward established authority and following long-standing traditions. It includes maintaining social order and fulfilling the duties tied to hierarchical roles, such as obedience, respect, and role-based responsibilities.
+        Sanctity/Degradation: Beyond religion, this value highlights respect for human dignity and aversion to moral or physical corruption, promoting purity, self-control, and the belief that the body is sacred and vulnerable to defilement.
+        Liberty/Oppression: Captures the feelings of reactance and resentment people experience when their freedom is restricted, often leading to collective disdain for authoritarian figures and motivating unity and resistance against oppression. 
+        
+      Choose one of the following responses:
+        - Care/Harm
+        - Fairness/Cheating
+        - Loyalty/Betrayal
+        - Authority/Subversion
+        - Sanctity/Degradation
+        - Liberty/Oppression
+  
+    choices:
+      - Care/Harm
+      - Fairness/Cheating
+      - Loyalty/Betrayal
+      - Authority/Subversion
+      - Sanctity/Degradation
+      - Liberty/Oppression
+     
