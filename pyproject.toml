@@ -10,6 +10,7 @@ authors = [
 license = { file = "LICENSE" }
 dependencies = [
     "hydra-core>=1.3.2",
+    "pandas>=2.3.3",
     "vllm>=0.11.0",
 ]
 
