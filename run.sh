@@ -39,6 +39,6 @@ echo "Beginning classification at $(date)"
 uv run -m llm_flow \
   flow=classify_ads \
   output_name=classify_ads \
-  mode.name=mistralai/Mistral-7B-Instruct-v0.3
+  model.name=mistralai/Mistral-7B-Instruct-v0.3
 
 echo "run finished at $(date)"

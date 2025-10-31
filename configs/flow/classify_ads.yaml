@@ -31,6 +31,10 @@ steps:
     user: |
       What is the stance of this ad towards the topic? Is it generally "in favor of" (supportive) or "against" (opposed) the topic
 
+    choices:
+      - in favor of
+      - against
+
   - name: moral_foundation
     type: guided
     user: >
