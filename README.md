@@ -22,7 +22,7 @@ This project uses **[Hydra](https://hydra.cc)** for configuration management. Th
 Example:
 
 ```bash
-python -m src.llm_flow \
+python -m llm_flow \
     model.name=openai/gpt-oss-120b \
     model.temperature=0.5 \
     data_dir=data/processed \
@@ -52,7 +52,7 @@ Place your data in the `data/` directory (or override `data_dir` via config/CLI)
 3. Run:
 
    ```bash
-   python -m src.llm_flow
+   python -m llm_flow
    ```
 4. Results are saved automatically to the Hydra run directory (default: `outputs/YYYY-MM-DD/HH-MM-SS-<SLURM_JOB_ID>/`).
 
