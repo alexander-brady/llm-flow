@@ -1,12 +1,12 @@
 from pathlib import Path
 
 import pandas as pd
-from tqdm import tqdm
 from omegaconf import DictConfig
+from tqdm import tqdm
 
 from .io import iter_parquet_dir
 from .llm import build_step_params, init_models, run_steps_on_df
-from .utils import extract_params, build_results
+from .utils import build_results, extract_params
 
 
 def run_pipeline(cfg: DictConfig, *, log) -> pd.DataFrame:
@@ -23,12 +23,11 @@ def run_pipeline(cfg: DictConfig, *, log) -> pd.DataFrame:
         log.warning("No parquet files found in %s", data_dir)
         return pd.DataFrame()
 
-
     # Run flow on each file.
     log.info("Processing %d files from %s", file_count, data_dir)
     final = []
     for filename, df in tqdm(file_iter, total=file_count, desc="Processing files"):
         res = run_steps_on_df(df, cfg.flow.steps, tokenizer, llm, step_params, log=log)
         final.append(build_results(df, filename, res))
-        
+
     return pd.concat(final, ignore_index=True) if final else pd.DataFrame()

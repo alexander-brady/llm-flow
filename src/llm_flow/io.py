@@ -1,9 +1,10 @@
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Iterator, Tuple
+
 import pandas as pd
 
 
-def load_articles_from_dir(dir_path: Path) -> Iterator[Tuple[str, pd.DataFrame]]:
+def load_articles_from_dir(dir_path: Path) -> Iterator[tuple[str, pd.DataFrame]]:
     """
     Load downloaded articles from the parquet files in the specified directory.
 
@@ -20,7 +21,7 @@ def load_articles_from_dir(dir_path: Path) -> Iterator[Tuple[str, pd.DataFrame]]
             yield filename.stem, pd.read_csv(filename)
 
 
-def iter_parquet_dir(data_dir: Path) -> Tuple[int, Iterator[Tuple[str, pd.DataFrame]]]:
+def iter_parquet_dir(data_dir: Path) -> tuple[int, Iterator[tuple[str, pd.DataFrame]]]:
     """
     Iterate over the parquet files in the specified directory.
 
@@ -28,7 +29,7 @@ def iter_parquet_dir(data_dir: Path) -> Tuple[int, Iterator[Tuple[str, pd.DataFr
         data_dir (Path): The directory to search for parquet files.
 
     Returns:
-        Tuple[int, Iterator[Tuple[str, pd.DataFrame]]]: 
+        Tuple[int, Iterator[Tuple[str, pd.DataFrame]]]:
             A tuple containing the number of files found and an iterator over the articles.
     """
     file_count = sum(1 for f in data_dir.glob("*") if f.is_file() and f.suffix.lower() in {".parquet", ".csv"})

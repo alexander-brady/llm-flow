@@ -1,10 +1,11 @@
 from pathlib import Path
+
 import hydra
 from omegaconf import DictConfig
 
+from .io import save_results
 from .logging_setup import init_logging
 from .pipeline import run_pipeline
-from .io import save_results
 
 
 @hydra.main(config_path="../../configs", config_name="config", version_base="1.3")
@@ -17,4 +18,4 @@ def main(cfg: DictConfig):
 
 
 if __name__ == "__main__":
-    main() # type: ignore
+    main()  # type: ignore

@@ -1,5 +1,6 @@
-import sys
 import logging
+import sys
+
 from omegaconf import DictConfig
 
 
@@ -16,10 +17,11 @@ def setup_logging(cfg: DictConfig):
         handlers=[logging.StreamHandler(sys.stdout)],
     )
 
+
 def init_logging(cfg: DictConfig) -> logging.Logger:
     """
     Initialize logging for the application and return the logger.
-    
+
     Args:
         cfg (DictConfig): The configuration object.
 
